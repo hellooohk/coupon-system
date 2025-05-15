@@ -1,19 +1,20 @@
 package main
 
 import (
-    "github.com/gin-gonic/gin"
-    "log"
+	"coupon-system/internal/handlers"
+	"coupon-system/internal/repository"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-    r := gin.Default()
+	repository.InitDB()
 
-    // Health check route
-    r.GET("/ping", func(c *gin.Context) {
-        c.JSON(200, gin.H{"message": "pong"})
-    })
+	r := gin.Default()
 
-    if err := r.Run(":8080"); err != nil {
-        log.Fatal("Failed to run server: ", err)
-    }
+	v1 := r.Group("/api/v1")
+	{
+		v1.POST("/coupons", handlers.CreateCouponHandler)
+	}
+
+	r.Run(":8080")
 }
